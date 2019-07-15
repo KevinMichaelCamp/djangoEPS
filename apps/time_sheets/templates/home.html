@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <title>EPS Home</title>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    // Filter table results from selection
+    $(document).ready(function($) {
+      $('#mySelector').change(function() {
+        $('table').show();
+        var selection = $(this).val();
+        var dataset = $('#myTable tbody').find('tr');
+        // show all rows first
+        dataset.show();
+        // filter the rows that should be hidden
+        dataset.filter(function(index, item) {
+          return $(item).find('td:first-child').text().split(',').indexOf(selection) === -1;
+        }).hide();
+      });
+    });
+
+    // Passsing data to bootstrap modal
+    $(function () {
+        $(".formModal").click(function () {
+            var shift_id = $(this).data('id');
+            $(".modal-body #hiddenValue").val(shift_id);
+        })
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+      <ul class="navbar-nav nav-fill w-100">
+        <li class="nav-item active">
+          <a class="nav-link" href="/home">
+            <h4>Clock In/Out</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/points">
+            <h4>Points</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/report">
+            <h4>Daily Report</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings">
+            <h4>Settings</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">
+            <h4>Logout</h4>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="main">
+      <div class="row">
+        <div class="col-sm-3" >
+          <div class="row user">
+            <div class="container mt-3">
+              <div class="media p-3">
+                <img src="{% static '/img/user_unisex.png' %}" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                <div class="media-body">
+                  <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                  {% if user.user_level == 9 %}
+                    <a class="bold" href="/admin_home"><img class="mr-3" src="{% static '/img/admin_view_eye.png' %}" alt="Admin View" style="width:60px">Admin View</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clock">
+            <h5>{{ date_time }}</h5>
+            <a href="/clock_in"><button class="btn btn-outline-primary m-2 font-weight-bold" type="submit">Clock In</button></a>
+            <button class="btn btn-outline-primary m-2 font-weight-bold" type="button" data-toggle="modal" data-target="#myModal">Forgot to Clock Out Yesterday?</button>
+          </div>
+          <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Forgot to Clockout?</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <table class="table table-hover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>ShiftID</th>
+                        <th>Date</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                        <th>Hours</th>
+                        <th>Points</th>
+                        <th>Task Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for shift in user_shifts %}
+                        <tr>
+                          <td><a href="#" data-toggle="modal" data-target="#formModal"  class="formModal" data-id="{{ shift.id }}">{{ shift.id }}</a></td>
+                          <td>{{ shift.date }}</td>
+                          <td>{{ shift.time_in }}</td>
+                          <td>{{ shift.time_out }}</td>
+                          <td>{{ shift.hours }} hrs</td>
+                          <td>{{ shift.points }}</td>
+                          <td>{{ shift.description }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-danger font-weight-bold" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="formModal">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Forgot to Clockout?</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <form action="/forgot" method="post">
+                    {% csrf_token%}
+                    <input type="hidden" name="shift_id" id="hiddenValue" value=""/>
+                    <label>Clock Out Time: </label>
+                    <input type="datetime-local" name="clock_out">
+                    <textarea name="description" rows="6" cols="40" placeholder="Task Description (e.g. Completed wireframe for EPS user side)"></textarea>
+                    <button class="btn btn-outline-primary m-2 font-weight-bold" type="submit">Clock Out</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-danger font-weight-bold" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row points">
+            <h4 class="text-danger">My Points</h4>
+            <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+            <h4 class="text-primary">All User Points</h4>
+            <h2 class="display-4 text-primary">{{ company_points }}</h2>
+            <blockquote class="blockquote">
+              <p class="small">"{{ quote.quote }}"</p>
+              <footer class="blockquote-footer">{{ quote.author }}</footer>
+            </blockquote>
+          </div>
+        </div>
+        <div class="col-sm-9 window" >
+          <h3 class="window_head">Clock Records</h3>
+          <select id="mySelector" class="user_name" name="user_name">
+            <option value="">Filter by User</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+          </select>
+          {% if messages %}
+          <div class="alert alert-danger">
+            <strong>ALERT!</strong>
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="container table-responsive">
+            <table id="myTable" class="table table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>UserID</th>
+                  <th>User Name</th>
+                  <th>Date</th>
+                  <th>Clock In</th>
+                  <th>Clock Out</th>
+                  <th>Hours</th>
+                  <th>Points</th>
+                  <th>Task Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for shift in shifts %}
+                <tr>
+                  <td>{{ shift.employee.id }}</td>
+                  <td>{{ shift.employee.first_name }} {{ shift.employee.last_name }}</td>
+                  <td>{{ shift.date }}</td>
+                  <td>{{ shift.time_in }}</td>
+                  <td>{{ shift.time_out }}</td>
+                  <td>{{ shift.hours }} hrs</td>
+                  <td>{{ shift.points }}</td>
+                  <td>{{ shift.description }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

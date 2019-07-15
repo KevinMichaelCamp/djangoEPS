@@ -1,0 +1,77 @@
+a {
+  display: block;
+}
+
+.alert {
+  display: inline-block;
+  margin: 20px 0 0 40px;
+  vertical-align: top;
+}
+
+.bold {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.clock {
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+form {
+  display: inline-block;
+}
+
+#formModal button, textarea {
+  display: block;
+  margin-top: 20px;
+}
+
+.main {
+  margin-left: 15px;
+}
+
+#myModal{
+  height: 750px;
+}
+
+
+.points {
+  border-top: 1pt solid darkgrey;
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+select {
+  border-radius: 5px;
+  margin:25px 0 0 50px;
+}
+
+.select {
+  height: 90px;
+  vertical-align: middle;
+}
+
+.table-responsive {
+  height: 500px;
+  margin: 40px 0 0 35px;
+  overflow-y: scroll;
+}
+
+.table-responsive th{
+  position: sticky;
+  top: 0;
+}
+
+.user {
+  background-color: lightgrey;
+  height: 150px;
+  text-align: center;
+}
+
+.window_head{
+  display: inline-block;
+  margin: 40px 0 40px 50px;
+}

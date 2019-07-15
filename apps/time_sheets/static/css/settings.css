@@ -1,0 +1,60 @@
+a {
+  display: block;
+}
+
+.alert {
+  display: inline-block;
+  margin: 20px 0 0 20px;
+  vertical-align: top;
+}
+
+.bold {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+button {
+  margin: 20px 0 0 460px;
+}
+
+.clock {
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+input {
+  border-radius: 5px;
+  padding: 5px;
+  width: 400px;
+}
+
+.main {
+  margin-left: 15px;
+}
+
+.points {
+  border-top: 1pt solid darkgrey;
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+
+table{
+  margin-left: 40px;
+}
+
+td {
+  padding: 10px 10px;
+}
+
+.user {
+  background-color: lightgrey;
+  height: 150px;
+  text-align: center;
+}
+
+.window_head{
+  display: inline-block;
+  margin: 40px 0 40px 50px;
+}

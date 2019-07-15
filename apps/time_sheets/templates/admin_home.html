@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <title>Admin Home</title>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+  <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+  // Passsing data to bootstrap modal
+  $(function () {
+      $(".formModal").click(function () {
+          var user_id = $(this).data('id');
+          $(".modal-body #hiddenValue").val(user_id);
+      })
+  });
+  </script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+      <ul class="navbar-nav nav-fill w-100">
+        <li class="nav-item active">
+          <a class="nav-link" href="/admin_home">
+            <h4>Manage Employee</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/updates">
+            <h4>Daily Updates</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">
+            <h4>Logout</h4>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="main">
+      <div class="row">
+        <div class="col-sm-3" >
+          <div class="row user">
+            <div class="admin container mt-3">
+              <div class="media p-3">
+                <img src="{% static '/img/user_unisex.png' %}" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                <div class="media-body">
+                  <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                  <a class="white" href="/home"><img class="mr-3" src="{% static '/img/admin_view_eye.png' %}" alt="Admin View" style="width:60px">User View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clock">
+            <h5>{{ date_time }}</h5>
+          </div>
+          <div class="row points">
+            <h4 class="text-danger">My Points</h4>
+            <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+            <h4 class="text-primary">All User Points</h4>
+            <h2 class="display-4 text-primary">{{ company_points }}</h2>
+            <blockquote class="blockquote" cite="Dr. Seuss">
+              <p class="small">"{{ quote.quote }}"</p>
+              <footer class="blockquote-footer">{{ quote.author }}</footer>
+              <a data-toggle="modal" href="#quoteModal"><img src="{% static '/img/edit_pencil.png' %}" alt="Edit"style="width:20px"></a>
+            </blockquote>
+            <div class="modal" id="quoteModal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Change Daily Quote</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="edit_quote" method="post">
+                      {% csrf_token %}
+                      <label>Author:</label>
+                      <input type="text" name="author" placeholder="Enter Author Name">
+                      <label>Quote:</label>
+                      <textarea name="quote" rows="8" cols="50" placeholder="Enter Quote Text"></textarea>
+                      <button class="btn btn-outline-primary font-weight-bold" type="submit">Change Quote</button>
+                    </form>
+                  </div>
+                  {% if messages %}
+                  <div class="alert alert-danger">
+                    <strong>ALERT!</strong>
+                    {% for message in messages %}
+                      <p>{{ message }}</p>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger font-weight-bold" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-9 window" >
+          <h3 class="window_head">Manage Employee</h3>
+          {% if messages %}
+          <div class="alert alert-danger">
+            <strong>ALERT!</strong>
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="container table-responsive">
+            <table id="myTable" class="table table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>EmployeeID</th>
+                  <th>Employee Name</th>
+                  <th>Joined Date</th>
+                  <th>Current Points</th>
+                  <th>Points Rate</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.first_name }} {{ user.last_name }}</td>
+                  <td>{{ user.created_at }}</td>
+                  <td>{{ user.total_points }}</td>
+                  <td>{{ user.points_rate }}/hr</td>
+                  <td><a href="#" class="formModal" data-target="#editModal" data-toggle="modal" data-id="{{ user.id }}"><i class='far fa-edit' style='font-size:24px'></i></a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="modal fade" id="editModal">
+              <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Edit Employee</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                      <form class="edit_form" action="/edit_user" method="post">
+                        <h5>Employee Profile</h5>
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" id="hiddenValue" value=""/>
+                        <table>
+                          <tr>
+                            <td><label>First Name:</label></td>
+                            <td><input type="text" name="first_name" placeholder="Enter first name"></td>
+                          </tr>
+                          <tr>
+                            <td><label>Last Name:</label></td>
+                            <td><input type="text" name="last_name" placeholder="Enter last name"></td>
+                          </tr>
+                          <tr>
+                            <td><label>Email:</label></td>
+                            <td><input type="text" name="email" placeholder="Enter email"></td>
+                          </tr>
+                          <tr>
+                            <td><label>Role:</label></td>
+                            <td><select name="user_level">
+                              <option value="1">User</option>
+                              <option value="9">Admin</option>
+                            </select>
+                          </tr>
+                        </table>
+                        <button class="btn btn-outline-primary" type="submit">Edit User</button>
+                      </form>
+                      <form class="points_form" action="/update_points" method="post">
+                        <h5>Update Points Rate</h5>
+                        {% csrf_token %}
+                        <input type="hidden" id="hiddenValue" name="user_id" value=""/>
+                        <table>
+                          <tr>
+                            <td><label>Points Rate:</label></td>
+                            <td><input type="number" name="points_rate" value="7.25" step=".25" placeholder="Enter points rate"></td>
+                          </tr>
+                        </table>
+                        <button class="btn btn-outline-primary" type="submit">Update Points</button>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger font-weight-bold" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

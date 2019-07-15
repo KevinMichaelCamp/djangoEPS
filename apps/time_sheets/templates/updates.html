@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Daily Updates</title>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link rel="stylesheet" href="{% static 'css/updates.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <ul class="navbar-nav nav-fill w-100">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin_home">
+              <h4>Manage Employee</h4>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/updates">
+              <h4>Daily Updates</h4>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">
+              <h4>Logout</h4>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="main">
+        <div class="row">
+          <div class="col-sm-3" >
+            <div class="row user">
+              <div class="admin container mt-3">
+                <div class="media p-3">
+                  <img src="{% static '/img/user_unisex.png' %}" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                  <div class="media-body">
+                    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                    <a class="white" href="/home"><img class="mr-3" src="{% static '/img/admin_view_eye.png' %}" alt="Admin View" style="width:60px">User View</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clock">
+              <h5>{{ date_time }}</h5>
+            </div>
+            <div class="row points">
+              <h4 class="text-danger">My Points</h4>
+              <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+              <h4 class="text-primary">All User Points</h4>
+              <h2 class="display-4 text-primary">{{ company_points }}</h2>
+              <blockquote class="blockquote" cite="Dr. Seuss">
+                <p class="small">"{{ quote.quote }}"</p>
+                <footer class="blockquote-footer">{{ quote.author }}</footer>
+                <a data-toggle="modal" href="#quoteModal"><img src="{% static '/img/edit_pencil.png' %}" alt="Edit"style="width:20px"></a>
+              </blockquote>
+              <div class="modal" id="quoteModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Change Daily Quote</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="edit_quote" method="post">
+                        {% csrf_token %}
+                        <label>Author:</label>
+                        <input type="text" name="author" placeholder="Enter Author Name">
+                        <label>Quote:</label>
+                        <textarea name="quote" rows="8" cols="50" placeholder="Enter Quote Text"></textarea>
+                        <button class="btn btn-outline-primary font-weight-bold" type="submit">Change Quote</button>
+                      </form>
+                    </div>
+                    {% if messages %}
+                    <div class="alert alert-danger">
+                      <strong>ALERT!</strong>
+                      {% for message in messages %}
+                        <p>{{ message }}</p>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-danger font-weight-bold" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-9 window" >
+            <h3 class="window_head">Daily Updates</h3>
+            {% if messages %}
+            <div class="alert alert-danger">
+              <strong>ALERT!</strong>
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="container table-responsive">
+              <table id="myTable" class="table table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Date of Report</th>
+                    <th>View Report</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for report in reports %}
+                  <tr>
+                    <td>{{ report.sender.first_name }} {{ report.sender.last_name }}</td>
+                    <td>{{ report.created_at }}</td>
+                    <!-- FIX MODAL FOR OBJECTS -->
+                    <td><a href="#" class="formModal" data-target="#editModal" data-toggle="modal" data-id="{{ user.id }}"><i class='far fa-file-alt' style='font-size:24px'></i></a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

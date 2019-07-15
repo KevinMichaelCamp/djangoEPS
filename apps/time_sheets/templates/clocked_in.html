@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <title>Clocked In</title>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/clocked_in.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function($) {
+      // $('table').hide();
+      $('#mySelector').change(function() {
+        $('table').show();
+        var selection = $(this).val();
+        var dataset = $('#myTable tbody').find('tr');
+        // show all rows first
+        dataset.show();
+        // filter the rows that should be hidden
+        dataset.filter(function(index, item) {
+          return $(item).find('td:first-child').text().split(',').indexOf(selection) === -1;
+        }).hide();
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+      <ul class="navbar-nav nav-fill w-100">
+        <li class="nav-item active">
+          <a class="nav-link" href="/home">
+            <h4>Clock In/Out</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/points">
+            <h4>Points</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/report">
+            <h4>Daily Report</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings">
+            <h4>Settings</h4>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">
+            <h4>Logout</h4>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="main">
+      <div class="row">
+        <div class="col-sm-3" >
+          <div class="row user">
+            <div class="container mt-3">
+              <div class="media p-3">
+                <img src="{% static '/img/user_unisex.png' %}" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                <div class="media-body">
+                  <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                  {% if user.user_level == 9 %}
+                    <a class="bold" href="/admin_home"><img class="mr-3" src="{% static '/img/admin_view_eye.png' %}" alt="Admin View" style="width:60px">Admin View</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clock">
+            <h5>{{ date_time}}</h5>
+            <form class="clock_out" action="/clock_out" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-primary font-weight-bold" type="submit">Clock Out</button>
+              <textarea name="description" rows="6" cols="40" placeholder="Task Description (e.g. Completed wireframe for EPS user side)"></textarea>
+            </form>
+          </div>
+          <div class="row points">
+            <h4 class="text-danger">My Points</h4>
+            <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+            <h4 class="text-primary">All User Points</h4>
+            <h2 class="display-4 text-primary">{{ company_points }}</h2>
+          </div>
+        </div>
+        <div class="col-sm-9 window" >
+          <h3 class="window_head">Clock Records</h3>
+          <select id="mySelector" class="user_name" name="user_name">
+            <option value="">Filter by User</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+          </select>
+          {% if messages %}
+          <div class="alert alert-danger">
+            <strong>ALERT!</strong>
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="container table-responsive">
+            <table id="myTable" class="table table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>UserID</th>
+                  <th>User Name</th>
+                  <th>Date</th>
+                  <th>Clock In</th>
+                  <th>Clock Out</th>
+                  <th>Hours</th>
+                  <th>Points</th>
+                  <th>Task Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for shift in shifts %}
+                <tr>
+                  <td>{{ shift.employee.id }}</td>
+                  <td>{{ shift.employee.first_name }} {{ shift.employee.last_name }}</td>
+                  <td>{{ shift.date }}</td>
+                  <td>{{ shift.time_in }}</td>
+                  <td>{{ shift.time_out }}</td>
+                  <td>{{ shift.hours }} hrs</td>
+                  <td>{{ shift.points }}</td>
+                  <td>{{ shift.description }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
