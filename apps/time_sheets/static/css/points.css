@@ -44,7 +44,7 @@ select {
 }
 
 .table-responsive {
-  height: 250px;
+  height: 200px;
   margin: 40px 0 0 35px;
   overflow-y: scroll;
 }

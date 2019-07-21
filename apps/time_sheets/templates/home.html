@@ -2,10 +2,10 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <title>EPS Home</title>
-  {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EPS Home</title>
+  {% load static %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -155,9 +155,9 @@
           </div>
           <div class="row points">
             <h4 class="text-danger">My Points</h4>
-            <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+            <h1 class="text-danger">{{ user.total_points }}</h1>
             <h4 class="text-primary">All User Points</h4>
-            <h2 class="display-4 text-primary">{{ company_points }}</h2>
+            <h1 class="text-primary">{{ company_points }}</h1>
             <blockquote class="blockquote">
               <p class="small">"{{ quote.quote }}"</p>
               <footer class="blockquote-footer">{{ quote.author }}</footer>

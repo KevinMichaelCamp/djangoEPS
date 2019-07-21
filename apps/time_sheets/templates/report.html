@@ -2,10 +2,10 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <title>EPS Daily Report</title>
-  {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EPS Daily Report</title>
+  {% load static %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="{% static 'css/report.css' %}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -131,10 +131,10 @@
           </div>
           <div class="row points">
             <h4 class="text-danger">My Points</h4>
-            <h2 class="display-4 text-danger">{{ user.total_points }}</h2>
+            <h1 class="text-danger">{{ user.total_points }}</h1>
             <h4 class="text-primary">All User Points</h4>
-            <h2 class="display-4 text-primary">{{ company_points }}</h2>
-            <blockquote class="blockquote" cite="Dr. Seuss">
+            <h1 class="text-primary">{{ company_points }}</h1>
+            <blockquote class="blockquote">
               <p class="small">"{{ quote.quote }}"</p>
               <footer class="blockquote-footer">{{ quote.author }}</footer>
             </blockquote>
@@ -158,15 +158,15 @@
             </div>
             <div class="form-group">
               <label for="description">What I did today</label>
-              <textarea id="description" name="description" rows="4" cols="80"></textarea>
+              <textarea id="description" name="description" rows="3" cols="80"></textarea>
             </div>
             <div class="form-group">
               <label for="challenges">Challenges I encountered</label>
-              <textarea id="challenges" name="challenges" rows="4" cols="80"></textarea>
+              <textarea id="challenges" name="challenges" rows="3" cols="80"></textarea>
             </div>
             <div class="form-group">
               <label for="help">What you can do to help</label>
-              <textarea id="help" name="help" rows="4" cols="80"></textarea>
+              <textarea id="help" name="help" rows="3" cols="80"></textarea>
             </div>
             <button class="btn btn-outline-primary font-weight-bold" type="submit">Submit Daily Report</button>
           </form>
