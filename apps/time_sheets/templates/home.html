@@ -142,7 +142,7 @@
                     {% csrf_token%}
                     <input type="hidden" name="shift_id" id="hiddenValue" value=""/>
                     <label>Clock Out Time: </label>
-                    <input type="datetime-local" name="clock_out">
+                    <input class="form-control" type="datetime-local" name="clock_out">
                     <textarea name="description" rows="6" cols="40" placeholder="Task Description (e.g. Completed wireframe for EPS user side)"></textarea>
                     <button class="btn btn-outline-primary m-2 font-weight-bold" type="submit">Clock Out</button>
                   </form>
@@ -182,7 +182,7 @@
           {% endif %}
           <div class="container table-responsive">
             <table id="myTable" class="table table-hover">
-              <thead class="thead-light">
+              <thead >
                 <tr>
                   <th>UserID</th>
                   <th>User Name</th>

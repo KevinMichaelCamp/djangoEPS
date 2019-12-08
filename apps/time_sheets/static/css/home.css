@@ -61,6 +61,7 @@ select {
 }
 
 .table-responsive th{
+  background-color: white;
   position: sticky;
   top: 0;
 }

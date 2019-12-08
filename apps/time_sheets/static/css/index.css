@@ -4,19 +4,20 @@
 
 button {
   display: block!important;
+  margin-bottom: 20px !important;
 }
 
 .container {
-  padding: 20px; 
+  padding: 20px;
 }
 
 input {
-  border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
+  width: 300px !important;
 }
 
 .jumbotron {
-  padding: 35px 0;
+  padding: 10px !important;
 }
 
 label {
