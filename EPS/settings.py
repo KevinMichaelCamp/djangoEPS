@@ -25,7 +25,7 @@ SECRET_KEY = 'gv-k6$%y#cd*p2jdo4i*8899l7fuv5893#az1f)me#a54-x^s#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.16.165.83']
+ALLOWED_HOSTS = ['3.16.165.83', 'localhost']
 
 
 # Application definition
